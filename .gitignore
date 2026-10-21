@@ -1,0 +1,12 @@
+# Python
+__pycache__
+
+# Runtime
+.vscode
+log
+.idea
+
+# pyinstaller
+*.spec
+build
+dist

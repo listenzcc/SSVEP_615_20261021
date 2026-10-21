@@ -1,0 +1,8 @@
+project:
+    name: SSVEP display
+    version: "0.1"
+
+design:
+    texts:
+        0: [30.75, 0.1, 0.2, 0.3, 0.4]
+        1: [30, 0.5, 0.2, 0.3, 0.4]

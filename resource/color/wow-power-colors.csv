@@ -1,0 +1,23 @@
+power	r1	g1	b1	r2	g2	b2	hex	description
+Mana	0	0	255	0	0	1	#0000FF	Blue
+Rage	255	0	0	1	0	0	#FF0000	Red
+Focus	255	128	64	1	0.5	0.25	#FF8040	Light Orange
+Energy	255	255	0	1	1	0	#FFFF00	Yellow
+Combo Points	255	245	105	1	0.96	0.41	#FFF569	Daisy
+Runes	128	128	128	0.5	0.5	0.5	#808080	Grey
+Runic Power	0	209	255	0	0.82	1	#00D1FF	Cyan
+[Soul Shards]	128	82	105	0.5	0.32	0.55	#80528C	Purple
+Lunar Power	77	133	230	0.3	0.52	0.9	#4D85E6	Royal Blue
+Holy Power	242	230	153	0.95	0.9	0.6	#F2E699	Khaki
+Maelstrom	0	128	255	0	0.5	1	#0080FF	Azure
+Insanity	102	0	204	0.4	0	0.8	#6600CC	Purple
+Chi	181	255	235	0.71	1	0.92	#B5FFEB	Aero Blue
+Arcane Charges	26	26	250	0.1	0.1	0.98	#1A1AFA	Blue
+Fury	201	66	253	0.788	0.259	0.992	#C942FD	Heliotrope
+Pain	255	156	0	1	0.61	0	#FF9C00	Orange
+Ammo Slot	204	153	0	0.8	0.6	0	#CC9900	Gold
+Fuel	0	140	128	0	0.55	0.5	#008C80	Teal
+[Ebon Might]	230	184	77	0.9	0.55	0.3	#E68C4D	Orange Poppy
+[Stagger] (light)	133	255	133	0.52	1	0.52	#85FF85	Mint Green
+[Stagger] (medium)	255	250	184	1	0.98	0.72	#FFFAB8	Pale Yellow
+[Stagger] (heavy)	255	107	107	1	0.42	0.42	#FF6B6B	Light Red

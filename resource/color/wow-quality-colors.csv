@@ -1,0 +1,10 @@
+quality	r1	g1	b1	r2	g2	b2	hex	description
+Poor	157	157	157	0.62	0.62	0.62	#9d9d9d	Gray
+Common	255	255	255	1	1	1	#ffffff	White
+Uncommon	30	255	0	0.12	1	0	#1eff00	Green
+Rare	0	112	221	0	0.44	0.87	#0070dd	Blue
+Epic	163	53	238	0.64	0.21	0.93	#a335ee	Purple
+Legendary	255	128	0	1	0.5	0	#ff8000	Orange
+Artifact	230	204	128	0.9	0.8	0.5	#e6cc80	Light Gold
+Heirloom	0	204	255	0	0.8	1	#00ccff	Blizzard Blue
+WoW Token	0	204	255	0	0.8	1	#00ccff	Blizzard Blue
