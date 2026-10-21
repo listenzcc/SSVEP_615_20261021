@@ -250,11 +250,9 @@ def main_render(freq=0.2):
         highlighted_block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
 
     # The 13rd always need this.
-    try:
+    if CURRENT_BLOCK_INDEX:
         current_block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
         trigger_code = BLOCK_TRIGGER_CODES[current_block_key]
-    except Exception:
-        pass
 
     if APP_STATE == 'flicker' and BLOCK_ITEMS and not FLICKER_TRIGGER_SENT:
         current_block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
