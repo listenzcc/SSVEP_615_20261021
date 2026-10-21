@@ -62,11 +62,14 @@ RED_FRAME_THICKNESS = float(conf.design.red_frame_thickness)
 SHOW_RED_FRAME = bool(conf.design.show_red_frame)  # 是否显示红色提示框
 BACKGROUND_ENABLED = bool(conf.design.background_enabled)
 BACKGROUND_COLOR = tuple(conf.design.background_color)
-BLOCK_TRIGGER_CODES = {str(k): int(v) for k, v in conf.experiment.block_trigger_codes.items()}
+BLOCK_TRIGGER_CODES = {str(k): int(v)
+                       for k, v in conf.experiment.block_trigger_codes.items()}
 
-missing_trigger_codes = [key for key in BLOCK_MAP if key not in BLOCK_TRIGGER_CODES]
+missing_trigger_codes = [
+    key for key in BLOCK_MAP if key not in BLOCK_TRIGGER_CODES]
 if missing_trigger_codes:
-    raise ValueError(f'block_trigger_codes is missing keys from design.blocks: {missing_trigger_codes}')
+    raise ValueError(
+        f'block_trigger_codes is missing keys from design.blocks: {missing_trigger_codes}')
 
 PARALLEL_PORT = ParallelPortTrigger(
     enabled=bool(conf.parallel_port.enabled),
@@ -84,21 +87,27 @@ ROUND_END_CODE = int(conf.parallel_port.round_end_code)
 
 def build_block_items():
     if USE_SPECIFIED_ORDER:
-        missing_blocks = [key for key in CONFIGURED_BLOCK_ORDER if key not in BLOCK_MAP]
+        missing_blocks = [
+            key for key in CONFIGURED_BLOCK_ORDER if key not in BLOCK_MAP]
         # 演示模式(continuous_mode)下允许重复和未定义的区块
         # 实验模式下保持严格检查
         if not CONTINUOUS_MODE:
-            duplicate_blocks = [key for key in CONFIGURED_BLOCK_ORDER if CONFIGURED_BLOCK_ORDER.count(key) > 1]
-            undefined_blocks = [key for key in BLOCK_MAP if key not in CONFIGURED_BLOCK_ORDER]
+            duplicate_blocks = [
+                key for key in CONFIGURED_BLOCK_ORDER if CONFIGURED_BLOCK_ORDER.count(key) > 1]
+            undefined_blocks = [
+                key for key in BLOCK_MAP if key not in CONFIGURED_BLOCK_ORDER]
 
             if duplicate_blocks:
-                raise ValueError(f'Duplicate keys found in block_order: {sorted(set(duplicate_blocks))}')
+                raise ValueError(
+                    f'Duplicate keys found in block_order: {sorted(set(duplicate_blocks))}')
 
             if undefined_blocks:
-                raise ValueError(f'block_order is missing keys from design.blocks: {undefined_blocks}')
+                raise ValueError(
+                    f'block_order is missing keys from design.blocks: {undefined_blocks}')
 
         if missing_blocks:
-            raise ValueError(f'Invalid block_order keys not found in design.blocks: {missing_blocks}')
+            raise ValueError(
+                f'Invalid block_order keys not found in design.blocks: {missing_blocks}')
 
         block_order = CONFIGURED_BLOCK_ORDER
     else:
@@ -120,7 +129,8 @@ def start_experiment_round(start_time):
     order = [key for key, _ in BLOCK_ITEMS]
     order_mode = 'specified' if USE_SPECIFIED_ORDER else 'random'
     logger.info(f'Start experiment round: mode={order_mode}, order={order}')
-    logger.info(f'Cue started: index=1/{len(BLOCK_ITEMS)}, block={BLOCK_ITEMS[0][0]}, t={start_time:0.3f}')
+    logger.info(
+        f'Cue started: index=1/{len(BLOCK_ITEMS)}, block={BLOCK_ITEMS[0][0]}, t={start_time:0.3f}')
     PARALLEL_PORT.send(ROUND_START_CODE)
 
 
@@ -139,7 +149,8 @@ def advance_experiment_phase(t):
         PHASE_START = t
         FLICKER_TRIGGER_SENT = False
         block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
-        logger.info(f'Flicker started: index={CURRENT_BLOCK_INDEX + 1}/{len(BLOCK_ITEMS)}, block={block_key}, t={t:0.3f}')
+        logger.info(
+            f'Flicker started: index={CURRENT_BLOCK_INDEX + 1}/{len(BLOCK_ITEMS)}, block={block_key}, t={t:0.3f}')
         return
 
     if APP_STATE == 'flicker' and t - PHASE_START >= FLICKER_SECONDS:
@@ -152,7 +163,8 @@ def advance_experiment_phase(t):
                 PHASE_START = t
                 FLICKER_TRIGGER_SENT = False
                 block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
-                logger.info(f'Cue started (looping): index=1/{len(BLOCK_ITEMS)}, block={block_key}, t={t:0.3f}')
+                logger.info(
+                    f'Cue started (looping): index=1/{len(BLOCK_ITEMS)}, block={block_key}, t={t:0.3f}')
                 return
             else:
                 # 实验模式：结束
@@ -165,7 +177,8 @@ def advance_experiment_phase(t):
         PHASE_START = t
         FLICKER_TRIGGER_SENT = False
         block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
-        logger.info(f'Cue started: index={CURRENT_BLOCK_INDEX + 1}/{len(BLOCK_ITEMS)}, block={block_key}, t={t:0.3f}')
+        logger.info(
+            f'Cue started: index={CURRENT_BLOCK_INDEX + 1}/{len(BLOCK_ITEMS)}, block={block_key}, t={t:0.3f}')
         return
 
 
@@ -217,7 +230,9 @@ def key_callback(window, key, scancode, action, mods):
 
     return
 
+
 t0 = 0
+
 
 def main_render(freq=0.2):
     global FLICKER_TRIGGER_SENT
@@ -228,8 +243,18 @@ def main_render(freq=0.2):
     advance_experiment_phase(t)
     blocks_are_active = APP_STATE == 'flicker'
     highlighted_block_key = None
+    current_block_key = None
+    trigger_code = None
+
     if APP_STATE == 'cue' and BLOCK_ITEMS:
         highlighted_block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
+
+    # The 13rd always need this.
+    try:
+        current_block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
+        trigger_code = BLOCK_TRIGGER_CODES[current_block_key]
+    except Exception:
+        pass
 
     if APP_STATE == 'flicker' and BLOCK_ITEMS and not FLICKER_TRIGGER_SENT:
         current_block_key = BLOCK_ITEMS[CURRENT_BLOCK_INDEX][0]
@@ -242,8 +267,23 @@ def main_render(freq=0.2):
         FLICKER_TRIGGER_SENT = True
         t0 = glfw.get_time()
 
+    # Display the 13rd when necessary.
+    if trigger_code == 13 and current_block_key == '13':
+        for target_key, target_data in DISPLAY_TARGET_ITEMS[12:]:
+            label_text, x, y, w, h = target_data
+
+            # 绘制标签（黑色背景，白色文字）
+            wnd.draw_rect(x, y-h, w, h, (0.0, 0.0, 0.0, 1.0))
+            wnd.draw_text(label_text, x + w/2, y-h + h/2,
+                          scale=0.8, anchor=TextAnchor.C, color='#ffffff')
+
+            # 高亮显示当前目标
+            if SHOW_RED_FRAME and highlighted_block_key == target_key:
+                draw_frame(x, y-h, w, h,
+                           color='#ff0000', thickness=RED_FRAME_THICKNESS)
+
     # 绘制目标文字块（12个）
-    for target_key, target_data in DISPLAY_TARGET_ITEMS:
+    for target_key, target_data in DISPLAY_TARGET_ITEMS[:12]:
         label_text, x, y, w, h = target_data
 
         # 绘制标签（黑色背景，白色文字）
@@ -254,7 +294,7 @@ def main_render(freq=0.2):
         # 高亮显示当前目标
         if SHOW_RED_FRAME and highlighted_block_key == target_key:
             draw_frame(x, y-h, w, h,
-                      color='#ff0000', thickness=RED_FRAME_THICKNESS)
+                       color='#ff0000', thickness=RED_FRAME_THICKNESS)
 
     # 绘制闪烁块（11个）
     for flicker_key, flicker_data in DISPLAY_FLICKER_ITEMS:
@@ -284,7 +324,6 @@ def main_render(freq=0.2):
     # toc = glfw.get_time()
     # print(int(1/(toc-t)))
 
-
     return
 
 
@@ -309,7 +348,8 @@ wnd.init_window()
 glfw.set_key_callback(wnd.window, key_callback)
 
 # Run FOREVER
-wnd.render_loop(main_render, background_enabled=BACKGROUND_ENABLED, background_color=BACKGROUND_COLOR, freq=opt.freq)
+wnd.render_loop(main_render, background_enabled=BACKGROUND_ENABLED,
+                background_color=BACKGROUND_COLOR, freq=opt.freq)
 
 # %% ---- 2026-04-10 ------------------------
 # Pending
