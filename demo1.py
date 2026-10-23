@@ -265,23 +265,23 @@ def main_render(freq=0.2):
         FLICKER_TRIGGER_SENT = True
         t0 = glfw.get_time()
 
-    # Display the 13rd when necessary.
-    if trigger_code == 13 and current_block_key == '13':
-        for target_key, target_data in DISPLAY_TARGET_ITEMS[12:]:
-            label_text, x, y, w, h = target_data
+    # # Display the 13rd when necessary.
+    # if trigger_code == 13 and current_block_key == '13':
+    #     for target_key, target_data in DISPLAY_TARGET_ITEMS[12:]:
+    #         label_text, x, y, w, h = target_data
 
-            # 绘制标签（黑色背景，白色文字）
-            wnd.draw_rect(x, y-h, w, h, (0.0, 0.0, 0.0, 1.0))
-            wnd.draw_text(label_text, x + w/2, y-h + h/2,
-                          scale=0.8, anchor=TextAnchor.C, color='#ffffff')
+    #         # 绘制标签（黑色背景，白色文字）
+    #         wnd.draw_rect(x, y-h, w, h, (0.0, 0.0, 0.0, 1.0))
+    #         wnd.draw_text(label_text, x + w/2, y-h + h/2,
+    #                       scale=0.8, anchor=TextAnchor.C, color='#ffffff')
 
-            # 高亮显示当前目标
-            if SHOW_RED_FRAME and highlighted_block_key == target_key:
-                draw_frame(x, y-h, w, h,
-                           color='#ff0000', thickness=RED_FRAME_THICKNESS)
+    #         # 高亮显示当前目标
+    #         if SHOW_RED_FRAME and highlighted_block_key == target_key:
+    #             draw_frame(x, y-h, w, h,
+    #                        color='#ff0000', thickness=RED_FRAME_THICKNESS)
 
     # 绘制目标文字块（12个）
-    for target_key, target_data in DISPLAY_TARGET_ITEMS[:12]:
+    for target_key, target_data in DISPLAY_TARGET_ITEMS:
         label_text, x, y, w, h = target_data
 
         # 绘制标签（黑色背景，白色文字）
@@ -293,6 +293,26 @@ def main_render(freq=0.2):
         if SHOW_RED_FRAME and highlighted_block_key == target_key:
             draw_frame(x, y-h, w, h,
                        color='#ff0000', thickness=RED_FRAME_THICKNESS)
+
+    # # Display the 13rd when necessary.
+    # if trigger_code == 13 and current_block_key == '13':
+    #     for flicker_key, flicker_data in DISPLAY_FLICKER_ITEMS[11:]:
+    #         freq, x, y, w, h = flicker_data
+
+    #         # 计算闪烁块亮度
+    #         if blocks_are_active:
+    #             brightness = (math.sin((t-t0)*2*math.pi*freq) + 1.0) * 0.5
+    #         else:
+    #             brightness = 1.0  # 纯白色背景
+
+    #         # 绘制闪烁块
+    #         wnd.draw_rect(x, y-h, w, h, (brightness,
+    #                       brightness, brightness, 1.0))
+
+    #         # 绘制频率标签
+    #         # freq_text = f'{freq}Hz'
+    #         # wnd.draw_text(freq_text, x + w/2, y - h + h/2,
+    #         #               scale=0.5, anchor=TextAnchor.C, color='#000000')
 
     # 绘制闪烁块（11个）
     for flicker_key, flicker_data in DISPLAY_FLICKER_ITEMS:
